@@ -1,0 +1,9 @@
+{
+     "name": "esBusSchedule",
+     "description": "Bus schedule backend for mikkelies hackathon",
+     "version": "0.0.1",
+     "dependencies": {
+        "express": "",
+        "mongodb": ""
+     }
+}
