@@ -1,5 +1,6 @@
 var express = require('express')
   , app = express()
+  , bodyParser = require('body-parser')
   , http = require('http')
   , server = http.createServer(app)
   , path = require('path')
@@ -11,7 +12,7 @@ var express = require('express')
 server.listen(8080);
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.bodyParser());
+app.use(bodyParser());
 
 var APP_KEY = "21KFOEefweofkewoFEWKEFW";
 
@@ -64,6 +65,19 @@ app.get('/allStops', function (req, res) {
 		collection.find().toArray(function(err, items) {
 			if(!err){
 				res.send(items);
+			}
+		});
+	});
+});
+
+app.post('/addroute', function (req, res) {
+	var data = req.body.busroute;
+	var routeObj = JSON.parse(data);
+	db.collection("busRoutes", function(err, collection){
+		collection.insert(routeObj, function(error, items) {
+			if(!error){
+				console.log("inserted route");
+				res.send("done");
 			}
 		});
 	});

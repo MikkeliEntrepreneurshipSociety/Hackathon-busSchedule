@@ -56,7 +56,25 @@ $.getJSON( "/allStops", function( json ) {
 });
 
 $("#createRoute").click(function(){
-	control.setWaypoints(routePoints);
+	routeCoords = [];
+	for(var i = 0; i < routePoints.length;i++){
+		routeCoords.push(L.latLng(routePoints[i].LATITUDE, routePoints[i].LONGITUDE));
+	}
+	control.setWaypoints(routeCoords);
+});
+
+$("#saveRoute").click(function(){
+	var routename = prompt("Route name:", "Route 666");
+	if(routename != null){
+		var route = {
+				name : routename,
+				busstops : routePoints
+		}
+		console.log(JSON.stringify(route));
+		$.post("/addroute", {busroute : JSON.stringify(route)}, function(data){
+			console.log("done");
+		});
+	}
 });
 
 $("#deletePoint").click(function(){
@@ -70,8 +88,14 @@ function createMarker(bustop){
 		pophtml += i+" : "+bustop[i]+"<br/>";
 	}
 	marker.bindPopup(pophtml);
+    marker.on('mouseover', function (e) {
+        this.openPopup();
+    });
+    marker.on('mouseout', function (e) {
+        this.closePopup();
+    });
 	marker.on('click', function(e){
-		routePoints.push(e.latlng);
-		$("#pointList").append("<option>"+e.target.options.stopdata.NAME_SV+"</option>");
+		routePoints.push(e.target.options.stopdata);
+		$("#pointList").append("<option>"+e.target.options.stopdata.STOP_ID+"</option>");
 	});
 }
