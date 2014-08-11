@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  div(id='mapBtns')          
+    button(id='showSideBar') Menu
+  div(id='sidebar')
+    h1 Test sidebar
+    div(id='sideBtns')
+      form
+        span Mistä:
+        input(type='text', name='from')
+        br
+        span Mihin:
+        input(type='text' name='to')
+        br
+        span Milloin: 
+        input(type='text', name='when')
+        br
+        input(type='radio', name='asd', value='depart') 
+        span Lähtö
+        input(type='radio', name='asd', value='arrive')
+        span Perillä 
+      button(id='searchRoute') Hae
+  script(type='text/javascript', src="/javascript/jquery-2.0.3.min.js")
+  script(src='http://code.jquery.com/ui/1.10.3/jquery-ui.js')
+  script(src='/javascript/leaflet.js')
+  script(src='/javascript/leaflet.draw.js')
+  script(type='text/javascript', src='/javascript/leaflet-routing-machine.min.js')
+  script(type='text/javascript', src='/javascript/L.Control.Sidebar.js')
+  script(type='text/javascript', src='/javascript/esSchedule.js')   
+  script(type='text/javascript', src='/javascript/client.js')

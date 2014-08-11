@@ -1,9 +1,14 @@
 {
-     "name": "esBusSchedule",
-     "description": "Bus schedule backend for mikkelies hackathon",
-     "version": "0.0.1",
-     "dependencies": {
-        "express": "",
-        "mongodb": ""
-     }
+  "name": "esBusSchedule",
+  "version": "0.0.2",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*",
+    "jade": "*",
+    "mongodb": "*"
+  }
 }

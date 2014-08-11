@@ -1,94 +1,38 @@
+
+/**
+ * Module dependencies.
+ */
+
 var express = require('express')
-  , app = express()
-  , bodyParser = require('body-parser')
-  , http = require('http')
-  , server = http.createServer(app)
-  , path = require('path')
-  , mongo = require('mongodb')
-  , Server = mongo.Server
-  , Db = mongo.Db
-  , ObjectID = mongo.ObjectID;
+, app = express()
+, bodyParser = require('body-parser')
+, routes = require('./routes')
+, api = require('./routes/api')
+, http = require('http')
+, server = http.createServer(app)
+, path = require('path')
+, mongo = require('mongodb')
+, Server = mongo.Server
+, Db = mongo.Db
+, ObjectID = mongo.ObjectID;
 
-server.listen(8080);
-
+// all environments
+app.set('port', process.env.PORT || 3000);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser());
 
-var APP_KEY = "21KFOEefweofkewoFEWKEFW";
+app.get('/', routes.index);
+app.get('/admin', routes.admin);
 
-var MONGO_HOST = "localhost";
-var MONGO_PORT = 27017;
-var MONGO_DB = "busSchedule";
+app.get('/api/closestStop/:lat/:lng/:destination/:time?', api.closest);
+app.get('/api/lines', api.lines);
+app.get('/api/buspositions', api.busLocations);
+app.get('/api/allStops', api.stops);
 
-var dbserver = new Server(MONGO_HOST, MONGO_PORT, {auto_reconnect: true});
-var db = new Db(MONGO_DB, dbserver);
+app.post('/api/addroute', api.addRoute);
+app.post('/api/buslocation', api.addBusLocation);
 
-db.open(function(err, db) {
-	  if(!err) {
-	    console.log("Connected to the database");
-	  }
-});
-
-app.get('/', function (req, res) {
-	  res.sendfile(__dirname + '/index.html');
-});
-
-app.get('/closestStop/:lat/:lng/:destination/:time?', function(req, res) {
-	var time;
-	if(!req.params.time){
-		time = Date.now();
-	}else{
-		time = req.params.time;
-	}
-	console.log("Looking for stop near lat:"+req.params.lat+" lng:"+req.params.lng+" time:"+time);
-	res.send("Finding closest stop");
-	db.collection("busStops", function(err, collection) {
-		collection.find().toArray(function(err, items) {
-			if(!err){
-				res.send(items);
-			}
-		});
-	});
-
-});
-
-app.get('/lines', function (req, res) {
-	console.log("Available lines:xxxxx");
-});
-
-app.get('/buspositions', function (req, res) {
-	//Get buss positions
-});
-
-app.get('/allStops', function (req, res) {
-	db.collection("busStops", function(err, collection) {
-		collection.find().toArray(function(err, items) {
-			if(!err){
-				res.send(items);
-			}
-		});
-	});
-});
-
-app.post('/addroute', function (req, res) {
-	var data = req.body.busroute;
-	var routeObj = JSON.parse(data);
-	db.collection("busRoutes", function(err, collection){
-		collection.insert(routeObj, function(error, items) {
-			if(!error){
-				console.log("inserted route");
-				res.send("done");
-			}
-		});
-	});
-});
-
-app.post('/buslocation', function (req, res) {
-	var coordinates = req.body.coords;
-	var line = req.body.line;
-	var secret = req.body.secret;
-	var time = Date.now();
-	if (secret === APP_KEY){
-		//ADD TO DATABASE
-	}
+http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
 });

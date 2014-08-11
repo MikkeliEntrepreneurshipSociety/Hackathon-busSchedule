@@ -21,10 +21,6 @@ var drawControl = new L.Control.Draw({
 
 map.addControl(drawControl);
 
-/*var osm = new L.tileLayer(
-	'http://tiles.kartat.kapsi.fi/ortokuva/{z}/{x}/{y}.jpg', {
-	attribution : '&copy; MML'
-}).addTo(map);*/ 
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
@@ -36,49 +32,11 @@ var control = L.Routing.control({
     ]
 }).addTo(map);
 
-var sidebar = L.control.sidebar('sidebar', {
-    position: 'left'
-});
 
-map.addControl(sidebar);
-
-var myBtn = document.getElementById('showSideBar');
-
-
-myBtn.addEventListener('click', function(event) {
-	sidebar.show();
-});
-
-$.getJSON( "/allStops", function( json ) {
+$.getJSON( "/api/allStops", function( json ) {
 	for(var i = 0; i < json.length; i++){
 		createMarker(json[i]);
 	}
-});
-
-$("#createRoute").click(function(){
-	routeCoords = [];
-	for(var i = 0; i < routePoints.length;i++){
-		routeCoords.push(L.latLng(routePoints[i].LATITUDE, routePoints[i].LONGITUDE));
-	}
-	control.setWaypoints(routeCoords);
-});
-
-$("#saveRoute").click(function(){
-	var routename = prompt("Route name:", "Route 666");
-	if(routename != null){
-		var route = {
-				name : routename,
-				busstops : routePoints
-		}
-		console.log(JSON.stringify(route));
-		$.post("/addroute", {busroute : JSON.stringify(route)}, function(data){
-			console.log("done");
-		});
-	}
-});
-
-$("#deletePoint").click(function(){
-	
 });
 
 function createMarker(bustop){

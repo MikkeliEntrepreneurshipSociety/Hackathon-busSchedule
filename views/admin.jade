@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  div(id='routePoints')
+    select(size=10, id='pointList')
+    br
+    button(id='deletePoint') Poista
+  div(id='mapBtns')          
+    button(id='showSideBar') Menu
+    button(id='createRoute') Create Route
+    button(id='saveRoute') Save route
+  script(type='text/javascript', src="/javascript/jquery-2.0.3.min.js")
+  script(src='http://code.jquery.com/ui/1.10.3/jquery-ui.js')
+  script(src='/javascript/leaflet.js')
+  script(src='/javascript/leaflet.draw.js')
+  script(type='text/javascript', src='/javascript/leaflet-routing-machine.min.js')
+  script(type='text/javascript', src='/javascript/L.Control.Sidebar.js')
+  script(type='text/javascript', src='/javascript/esSchedule.js')   
+  script(type='text/javascript', src='/javascript/admin.js')
